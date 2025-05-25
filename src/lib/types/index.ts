@@ -4,6 +4,7 @@ export enum DriveItem {
 }
 
 export type File = {
+    id: string,
     type: DriveItem.File,
     name: string,
     extension: string,
@@ -11,6 +12,7 @@ export type File = {
 }
 
 export type Folder = {
+    id: string,
     type: DriveItem.Folder,
     name: string,
     size: number,
