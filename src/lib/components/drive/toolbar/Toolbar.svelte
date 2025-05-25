@@ -1,4 +1,3 @@
-<!-- src/lib/components/drive/DriveTopbar.svelte -->
 <script lang="ts">
 	import {
 		Breadcrumb,
@@ -13,26 +12,26 @@
 		Appearance,
 	} from 'june-uikit';
 	import { createEventDispatcher } from 'svelte';
-
-	export let path: string[] = [];
+	import { path } from '$lib/stores/path';
 
 	const dispatch = createEventDispatcher();
 
 	function handleHome() {
-		dispatch('home');
+		path.set([]);
 	}
 
 	function handleNavigate(pathStr: string) {
-		dispatch('navigate', { path: pathStr });
+		const segments = pathStr.split('/').filter(Boolean);
+		path.set(segments);
 	}
 
-	$: breadcrumbRoute = path.join('/');
+	$: breadcrumbRoute = $path.join('/');
 </script>
 
 <Toolbar shape={Shape.Pill}>
 	<div slot="left" class="left">
 		<Tooltip content="Drive" position={Position.Bottom}>
-			<Button icon={SVGShape.Home} on:pressed={handleHome} appearance={(path.join("/") === "") ? Appearance.Primary : Appearance.Secondary} />
+			<Button icon={SVGShape.Home} on:pressed={handleHome} appearance={($path.join("/") === "") ? Appearance.Primary : Appearance.Secondary} />
 		</Tooltip>
 	</div>
 

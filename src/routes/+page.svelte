@@ -4,8 +4,8 @@
 	import { writable, derived } from 'svelte/store';
 	import Drive from '$lib/components/drive/Drive.svelte';
 	import Toolbar from '$lib/components/drive/toolbar/Toolbar.svelte';
+	import { path } from '$lib/stores/path';
 
-	let path = writable<string[]>([]);
 	const currentFolder = writable<Folder>(manifest);
 
 	function navigateToPath(pathStr: string) {
@@ -14,7 +14,7 @@
 
 		for (const name of segments) {
 			const next = target.children.find((item) => item.type === 1 && item.name === name) as Folder;
-			if (!next) return; // invalid path
+			if (!next) return;
 			target = next;
 		}
 
@@ -22,7 +22,6 @@
 		currentFolder.set(target);
 	}
 
-	// Sync folder when path updates
 	derived(path, ($path) => {
 		let target: Folder = manifest;
 		for (const name of $path) {
@@ -36,7 +35,6 @@
 
 <div id="drive">
 	<Toolbar
-		path={$path}
 		on:home={() => {
 			path.set([]);
 			currentFolder.set(manifest);

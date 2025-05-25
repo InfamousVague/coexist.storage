@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { Position, PredefinedColor, Swatch, Tooltip, type Color } from "june-uikit";
-
+    import { primaryColor } from '$lib/stores/color';
     const colors = Object.values(PredefinedColor);
+
     function handleSwatchClick(color: Color) {
-		document.documentElement.style.setProperty('--color-primary', color);
+        document.documentElement.style.setProperty('--color-primary', color);
+        primaryColor.set(color);
 	}
 </script>
 

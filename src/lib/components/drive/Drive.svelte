@@ -16,7 +16,6 @@
 	let folderColor: PredefinedColor = PredefinedColor.BrewedMustard;
 	let renamingFolderId: string | null = null;
 
-	// Helper: get current folder from manifest by path
 	function getFolderByPath(folder: Folder, path: string[]): Folder {
 		let current = folder;
 		for (const segment of path) {
@@ -29,7 +28,6 @@
 		return current;
 	}
 
-	// Helper: update folder's children in the manifest tree
 	function updateFolderChildrenByPath(folder: Folder, path: string[], items: Item[]): Folder {
 		if (path.length === 0) {
 			return { ...folder, children: items };
