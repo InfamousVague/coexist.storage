@@ -22,3 +22,11 @@ function createManifestStore() {
 }
 
 export const manifest = createManifestStore();
+
+export function resetManifest() {
+	const fresh = structuredClone(mockManifest);
+	manifest.set(fresh);
+	if (browser) {
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(fresh));
+	}
+}

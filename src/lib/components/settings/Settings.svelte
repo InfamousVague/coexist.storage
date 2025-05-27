@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { Accordion, AccordionItem, Appearance, Text, ThemeSwitcher } from "june-uikit";
+	import { Accordion, AccordionItem, Appearance, Button, Shape, Text, ThemeSwitcher } from "june-uikit";
 	import ColorPicker from "./personalize/ColorPicker.svelte";
+	import { resetManifest } from "$lib/stores/manifest";
 </script>
 
 <Accordion >
@@ -24,6 +25,21 @@
             <div class="setting">
                 <div class="control">
                     <ColorPicker />
+                </div>
+            </div>
+        </div>
+    </AccordionItem>
+    <AccordionItem title="Developer">
+        <div class="settings">
+            <div class="setting">
+                <div class="info">
+                    <Text>Reload Manifest</Text>
+                    <Text appearance={Appearance.Muted}>Reset the mock data on the page.</Text>
+                </div>
+                <div class="control">
+                    <Button appearance={Appearance.Warning} shape={Shape.Pill} on:pressed={() => resetManifest()}>
+                        Reset
+                    </Button>
                 </div>
             </div>
         </div>
