@@ -41,7 +41,7 @@
 		}}
 		on:navigate={(e) => navigateToPath(e.detail.path)}
 	/>
-	<Drive bind:path={$path} />
+	<Drive />
 </div>
 
 <style lang="scss">

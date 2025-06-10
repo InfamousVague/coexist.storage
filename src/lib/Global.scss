@@ -17,6 +17,12 @@
   background: var(--color-primary);
 }
 
-:global(.folder) {
-    color: var(--color-primary);
+/* Force scrollbar visibility in all scrollable areas */
+:global(*) {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary) transparent;
+}
+
+:global(body, html) {
+  overflow: hidden;
 }

@@ -1,0 +1,41 @@
+.list-view {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: var(--gap-less);
+
+    .list-header,
+    .list-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .list-item {
+        cursor: pointer;
+        transition: background var(--animation-duation) ease;
+        background-color: var(--color-background-secondary);
+        padding: var(--padding);
+        border-radius: var(--border-radius);
+
+        .item-info {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        &:hover {
+            background: var(--color-secondary);
+        }
+    }
+
+    span {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    span:first-child {
+        flex: 2; // Name gets extra space
+    }
+}

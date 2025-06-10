@@ -1137,10 +1137,10 @@ json-stable-stringify-without-jsonify@^1.0.1:
   resolved "https://registry.npmjs.org/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz"
   integrity sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==
 
-june-uikit@^0.0.26:
-  version "0.0.26"
-  resolved "https://registry.npmjs.org/june-uikit/-/june-uikit-0.0.26.tgz"
-  integrity sha512-fezx9gGPwaPN1UI/3Jr5GE9pwAYrJXgnvXvumDIVqzVcv5iFLu9mJ0zppSL8VZihXYq09Z5QFnmYhgncpOyMrg==
+june-uikit@^0.0.33:
+  version "0.0.33"
+  resolved "https://registry.npmjs.org/june-uikit/-/june-uikit-0.0.33.tgz"
+  integrity sha512-4lja1nGUsVAfJbDpytk/KxDqUYwD1xfZmHRycaXiFTgMnnpO96I3TRv5F+NabNq/PDjGWbIuSshNU2GFqSoesQ==
   dependencies:
     "@emoji-mart/data" "^1.2.1"
     "@sveltejs/kit" "2.21.0"

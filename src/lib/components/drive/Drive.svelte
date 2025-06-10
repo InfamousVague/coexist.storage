@@ -1,81 +1,58 @@
 <script lang="ts">
-	import { dndzone } from 'svelte-dnd-action';
-	import { Folder as FolderComponent, File as FileComponent, PredefinedColor } from 'june-uikit';
+	import {
+		Folder as FolderComponent,
+		File as FileComponent,
+		PredefinedColor,
+		SVGShape,
+	} from 'june-uikit';
 	import { getFiletypeColor } from '$lib/utils/files';
 	import type { File, Folder } from '$lib/types';
+	import { manifest as initialManifest } from '$lib/mock/mock.js';
+	import { writable, get } from 'svelte/store';
 	import { createEventDispatcher } from 'svelte';
-	import { manifest } from '$lib/stores/manifest';
-	import { get } from 'svelte/store';
+	import { path } from '$lib/stores/path';
+	import { uiOptions } from '$lib/stores/ui';
+	import List from './views/List.svelte';
+	import Column from './views/Column.svelte';
 
-	// Props
-	export let path: string[] = [];
-
+	const manifest = writable<Folder>(structuredClone(initialManifest));
+	const currentFolder = writable<Folder>(initialManifest);
 	const dispatch = createEventDispatcher();
 
 	type Item = File | Folder;
 	let folderColor: PredefinedColor = PredefinedColor.BrewedMustard;
+
 	let renamingFolderId: string | null = null;
 
-	function getFolderByPath(folder: Folder, path: string[]): Folder {
-		let current = folder;
-		for (const segment of path) {
-			const next = current.children.find(
-				(item) => item.type === 1 && item.name === segment
-			) as Folder | undefined;
+	$: {
+		let target: Folder = get(manifest);
+		for (const name of $path) {
+			const next = target.children.find((item) => item.type === 1 && item.name === name) as Folder;
 			if (!next) break;
-			current = next;
+			target = next;
 		}
-		return current;
-	}
-
-	function updateFolderChildrenByPath(folder: Folder, path: string[], items: Item[]): Folder {
-		if (path.length === 0) {
-			return { ...folder, children: items };
-		}
-
-		const [currentName, ...rest] = path;
-		return {
-			...folder,
-			children: folder.children.map((child) => {
-				if (child.type === 1 && child.name === currentName) {
-					return updateFolderChildrenByPath(child, rest, items);
-				}
-				return child;
-			})
-		};
+		currentFolder.set(target);
 	}
 
 	function navigateToFolder(folder: Folder) {
 		if (renamingFolderId === folder.id) return;
-		path = [...path, folder.name];
-		dispatch("navigate", { path });
+		path.set([...$path, folder.name]);
+		dispatch('navigate', { path });
 	}
 
-	function handleDnd(event: CustomEvent<{ items: Item[] }>) {
-		const { items } = event.detail;
-		const current = get(manifest);
-		const updated = updateFolderChildrenByPath(current, path, items);
-		manifest.set(updated);
+	function getAvailableMoveTargets(excludeId: string): { id: string; text: string }[] {
+		return $currentFolder.children
+			.filter((item) => item.type === 1 && item.id !== excludeId)
+			.map((folder) => ({
+				id: folder.id,
+				text: folder.name
+			}));
 	}
 </script>
 
-<div
-	class="drive"
-	use:dndzone={{
-		items: getFolderByPath($manifest, path).children,
-		flipDurationMs: 150,
-		dragDisabled: false,
-		dropFromOthersDisabled: true
-	}}
-	on:consider={handleDnd}
-	on:finalize={handleDnd}
->
-	{#each getFolderByPath($manifest, path).children as item (item.id)}
-		<!-- svelte-ignore a11y_no_static_element_interactions -->
-		<div
-			data-id={item.id}
-			class="draggable-item"
-		>
+<div class="drive">
+	{#if $uiOptions.layout === 'Grid'}
+		{#each $currentFolder.children as item (item.id)}
 			{#if item.type === 1}
 				<FolderComponent
 					name={item.name}
@@ -91,25 +68,36 @@
 					bytes={item.size}
 					type={item.extension}
 					color={getFiletypeColor(item.extension)}
+					additionalContext={[
+						{
+							id: 'move',
+							text: 'Move',
+							icon: SVGShape.FolderOpen,
+							children: getAvailableMoveTargets(item.id).map((folder) => ({
+								id: folder.id,
+								text: folder.text,
+								icon: SVGShape.FolderPlus
+							}))
+						}
+					]}
 				/>
 			{/if}
-		</div>
-	{/each}
+		{/each}
+	{:else if $uiOptions.layout === 'List'}
+		<List
+			{navigateToFolder}
+			{getAvailableMoveTargets}
+			{currentFolder}
+			/>
+	{:else if $uiOptions.layout === 'Column'}
+		<Column
+			{navigateToFolder}
+			{getAvailableMoveTargets}
+			{currentFolder}
+			/>
+	{/if}
 </div>
 
 <style lang="scss">
-	@use "./Drive.scss" as *;
-
-	.drive {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--gap);
-		outline: none !important;
-		border: none;
-	}
-
-	.draggable-item {
-		outline: none;
-		cursor: default;
-	}
+	@use './Drive.scss' as *;
 </style>

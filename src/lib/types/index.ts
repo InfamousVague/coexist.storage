@@ -8,7 +8,9 @@ export type File = {
     type: DriveItem.File,
     name: string,
     extension: string,
-    size: number
+    size: number,
+    lastModified: number,
+    created: number
 }
 
 export type Folder = {
@@ -16,5 +18,7 @@ export type Folder = {
     type: DriveItem.Folder,
     name: string,
     size: number,
+    lastModified: number,
+    created: number,
     children: Array<File | Folder>
 }
